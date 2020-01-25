@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+
+	"fmt"
+
+	"github.com/dyk0/intTracker/stringparse"
+)
 
 func main() {
-	fmt.Println("vim-go")
+	if stringparse.Parse("vgo a") {
+		fmt.Println("passed")
+	}else{
+		fmt.Println("failed")
+	}
 }
