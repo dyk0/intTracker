@@ -1,15 +1,17 @@
-package stringparse
+package stringstuff
 
 import "testing"
 
 func TestParse(t *testing.T) {
 	cases := []struct {
-		in string; want bool
+		in   string
+		want bool
 	}{
 		{"foo_bar-baz", true},
 		{"foo_bar baz", false},
 		{"foo bar-baz", false},
 		{"foo-bar_baz1", true},
+		{"foo", true},
 	}
 	for _, c := range cases {
 		got := Parse(c.in)
