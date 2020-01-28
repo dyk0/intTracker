@@ -98,13 +98,10 @@ func delCommand(s []string, conn net.Conn) {
 		for i := e.min; i <= e.max; i++ {
 			record := collection[i]
 			// merc everything`
-			for j, _ := range record {
-				record = append(record[:j], record[j+1:]...)
-				collection[i] = record
-				break
-			}
+			collection[i] = record[:0]
 		}
 	}
+	conn.Write([]byte("OK" + "\n"))
 }
 func findCommand([]string) {}
 
