@@ -103,7 +103,30 @@ func delCommand(s []string, conn net.Conn) {
 	}
 	conn.Write([]byte("OK" + "\n"))
 }
-func findCommand([]string) {}
+func findCommand(s []string, conn net.Conn) {
+	// create the new record
+	e := newRecord(s)
+	var found []string
+	fmt.Println(e)
+	fmt.Println(found)
+	for i := e.min; i <= e.max; i++ {
+		fmt.Println(collection[i])
+		found = append(found, collection[i]...)
+	}
+	// remove duplicates from found
+	found = stringstuff.RemoveDuplicates(found)
+	fmt.Println(found)
+	if len(found) != 0 {
+		var result string
+		for _, s := range found {
+			result = result + s + " "
+		}
+		conn.Write([]byte(result + "\n"))
+	} else {
+		conn.Write([]byte("ERROR no results" + "\n"))
+	}
+
+}
 
 func newRecord(s []string) record {
 	r := record{}
@@ -112,21 +135,25 @@ func newRecord(s []string) record {
 		r.name = entry
 
 	} else {
-
 		r.name = ""
 	}
 
-	min, err := strconv.Atoi(s[1])
+	min, err := strconv.Atoi(strings.TrimSuffix(s[1], "\n"))
 	if err != nil {
 		fmt.Println("ERROR" + "\n")
 	}
 	r.min = uint32(min)
-	max, err := strconv.Atoi(strings.TrimSuffix(s[2], "\n"))
-	if err != nil {
-		fmt.Println("ERROR" + "\n")
-	}
 
-	r.max = uint32(max)
+	if len(s) == 2 {
+		r.max = uint32(min)
+	} else {
+		max, err := strconv.Atoi(strings.TrimSuffix(s[2], "\n"))
+		if err != nil {
+			fmt.Println("ERROR" + "\n")
+		}
+
+		r.max = uint32(max)
+	}
 	return r
 }
 
@@ -151,10 +178,9 @@ func handleRequest(conn net.Conn) {
 		fmt.Println(collection)
 	case "FIND":
 		fmt.Println("Find command received")
-		findCommand(message)
+		findCommand(message, conn)
 	default:
 		conn.Write([]byte("ERROR invailid arguments" + "\n"))
-		conn.Close()
 	}
 	handleRequest(conn)
 }
