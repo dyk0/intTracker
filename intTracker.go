@@ -14,7 +14,7 @@ import (
 //Setup constant variables for the server connection settings and intTracker logic
 
 const (
-	CONN_HOST = "localhost"
+	CONN_HOST = "0.0.0.0"
 	CONN_PORT = "8888"
 	CONN_TYPE = "tcp"
 	NUM_MIN   = 0
